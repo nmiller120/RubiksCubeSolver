@@ -11,7 +11,6 @@ class Color():
         self.__color_name = color_name
 
     def set_values(self, color_name, hsv_MIN, hsv_MAX, exclusive):
-        # set values, same as __init__()
         self.__hsv_MAX = hsv_MAX
         self.__hsv_MIN = hsv_MIN
         self.__exclusive = exclusive

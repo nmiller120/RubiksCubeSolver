@@ -150,20 +150,3 @@ class Facelet_Coords():
             if mask.item(x,y) == 255:
                 count += 1
         return count
-
-
-##    def find_coordinates(self, image):
-##        #image = np.copy(image)
-##        mask = self.__masks[5].get_mask(image)
-##
-##        for x in range(5):
-##            new_mask = self.__masks[x].get_mask(image)
-##            mask = cv2.bitwise_xor(new_mask, mask)
-##
-##        while True:
-##            cv2.imshow("Mask", mask)
-##            if cv2.waitKey(1) & 0xFF == ord('q'):
-##                #cap.release()
-##                break
-##
-##        cv2.destroyAllWindows()

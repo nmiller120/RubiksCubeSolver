@@ -113,24 +113,3 @@ class Color_File():
 
         return self.__colors[cn].is_exclusive()
     
-# class Servo_File():
-#     def __init__(self, servo_assembly):
-#         self.read_csv(servo_assembly)
-# 
-#     def read_csv(self, servo_assemblies):
-#         del servo_assemblies[:]
-#         csv_file = "servos.csv"
-#         file = open(csv_file,"r")
-#         x = 0
-#         for line in file:
-#             line = line.strip()
-#             csv_line = line.split(",")
-#             new_assembly = control.ServoAssembly(x)
-# 
-#             new_assembly.set_linear(int(csv_line[0]), int(csv_line[1]))
-#             new_assembly.set_radial(int(csv_line[2]), int(csv_line[3]), int(csv_line[4]))
-# 
-#             servo_assemblies.append(new_assembly)
-#             x+=1
-# 
-#         file.close()
