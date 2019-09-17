@@ -29,14 +29,13 @@ class FaceReader():
             exclusive = self.__file_control.is_exclusive(name)
             new_mask = overlay.Mask(name, lower, upper, exclusive)
             self.__masks.append(new_mask)
-        # 
+
         self.all_facelets_mask = self.get_all_facelets_mask(image)
         self.get_row_count_array()
         self.get_col_count_array()
         self.parse_arrays()
         self.create_facelet_coord_objects()
         
-        # print self.getFaceletColors(image)
 
     def getFaceletColors(self, image):
         self.all_facelets_mask = self.get_all_facelets_mask(image)

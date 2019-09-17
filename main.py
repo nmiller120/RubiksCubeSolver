@@ -18,13 +18,13 @@ def mechanicalDemo1(cubeStr, waitTime):
     """To solve the cube with a hardcoded cube map, cubeStr is the cube map
     and waitTime is the time to delay before the assembly grabs the cube"""
 
-    cubeStr = convertInput(cubeStr, "URF") # convert from pos to color
-    solution = kociemba.solve(cubeStr) # get solution string
+    cubeStr = convertInput(cubeStr, "URF") # convert from position reference to color reference
+    solution = kociemba.solve(cubeStr) # get solution string from kociemba algorithm
     control = cubes.AssemblyController() # create a control object
     control.all_retract() # retract all arms
-    time.sleep(waitTime) # wait for the cube to get into position
+    time.sleep(waitTime) # wait some time for the cube to get into position
     control.all_engaged() # engage claws
-    control.kociemba(solution) # exicute instruction string
+    control.kociemba(solution) # execute instruction string
     time.sleep(0.5) # wait
     control.all_retract() # release cube
 
@@ -83,7 +83,7 @@ def servoCalibration():
             break
 
 def colorCalibration(cap = None):
-    """Color Calibration gui, to set the minumum and maximum hsv values
+    """Color Calibration gui, to set the minumum and maximum hsv values when using the vision system
      cap: capture object"""
 
     #create "root" for Main Window

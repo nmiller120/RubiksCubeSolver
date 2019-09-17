@@ -1,3 +1,6 @@
+# This module contains the code to set up the gui for the Color and Servomotor calibration
+# windows.
+
 from Tkinter import *
 import cv2
 import config as configuration
@@ -17,8 +20,6 @@ class Setup_Servo_Window(Frame):
             new_scale = Scale(self, from_=0, to=180, orient=HORIZONTAL, length=250, label = text)
             self.scale_widgets.append(new_scale)
             self.scale_widgets[x].grid(row = x)
-
-
 
 
 class Setup_Color_Window(Frame):

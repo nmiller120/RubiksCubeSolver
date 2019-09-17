@@ -2,6 +2,10 @@ import serial
 import time
 
 class AssemblyController():
+    # serial commands: first character refers to the servo to control, 2nd character refers
+    # to the position, ie, "0121" means servo 0 position 1, servo 2 position 1. The positions
+    # are defined during the program phase in the code for the  __init__() function of this
+    # class
     __Serial = None
     __errorCheck = ""
     __delay = 0.5
@@ -18,6 +22,7 @@ class AssemblyController():
         Serial.write("progm".encode('utf-8')) # set arduino to program mode
         print(Serial.read()) # read response from arduino
 
+         # load servo default position values from csv file
         csv_file = "servos.csv"
         aFile = open(csv_file, 'r') # open csv file in read mode
 
@@ -28,7 +33,6 @@ class AssemblyController():
             for x in range(6):
                 toSend += chr(int(csv_line[x])) # read csv values into 'toSend'
 
-        ##print(" ".join(str(ord(c)) for c in toSend)) # returns 'toSend' in dec
         Serial.write(toSend) # write 'toSend' data to arduino
 
         while (Serial.in_waiting==0): # wait for response
@@ -149,6 +153,7 @@ class AssemblyController():
         self.__Serial.write(instruction)
 
     def kociemba(self, kociemba_string):
+        # Example of kociemba string:
         # "R' D2 R' U2 R F2 D B2 U' R F' U R2 D L2 D' B2 R2 B2 U' B2"
         sides = ['F', 'R', 'B', 'L', 'U', 'D']
         inst = kociemba_string.split(' ')
@@ -257,8 +262,7 @@ class AssemblyController():
             print "Done."
 
 class Orientation():
-    """Class needs updated, supposed to be an object to track the orientation 
-    of the rubiks cube"""
+    """object to track the orientation of the rubiks cube"""
     up = None
     front = None
     right = None

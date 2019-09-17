@@ -1,5 +1,6 @@
+# Handles the control of the color.csv file
+
 import Objects_Color as color
-#import Objects_CubeControl as control
 
 class Color_File():
     __def_name = "colors.csv"

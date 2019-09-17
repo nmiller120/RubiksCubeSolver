@@ -1,3 +1,5 @@
+# code to apply masks and filters to the image
+
 import cv2
 import numpy as np
 import config
