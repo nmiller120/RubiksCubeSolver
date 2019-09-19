@@ -1,4 +1,5 @@
-Rubiks Cube Solver Project
+Rubiks Cube Solver Project:
+
 Ongoing work-in-progress. Originally intended to grab and automatically solve a Rubik's cube after reading the colors off of the cube 
 faces via a webcam. 
 
