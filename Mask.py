@@ -1,7 +1,7 @@
 # Module defines a single class Mask. This class performs color filtering
 # on a given image. It also provides a mask (as defined by openCV), which is a
 # 2d array that represents the image with each pixel that satisfied the filter
-# criteria having a value of 1 and each pixel not passing the filter criteria
+# criteria having a value of 255 and each pixel not passing the filter criteria
 # having a value of 0.
 
 import cv2 # computer vision library for working with image processing
@@ -53,6 +53,8 @@ class Mask():
         else:
             mask = cv2.inRange(hsv, np.array(lower_array), np.array(upper_array))
 
+        # return a mask of the image, with pixels passing the filter being white
+        # and pixels failing the filter criteria being black
         return mask
 
     def parse_cap(self, sourceImage, lower_array, upper_array, exclusive):

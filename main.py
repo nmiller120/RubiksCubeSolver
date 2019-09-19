@@ -5,17 +5,17 @@
 import RubiksGUIs as gui # contains classes used for the calibration gui
 import AssemblyController as cubes # implements the lower level control of the
 # rubiks cube, moves the servo assembly
-import Mask as overlay #
+import Mask as overlay # implements image filtering
 from tkinter import * # library for implementing guis
 import cv2 # library for implementing computer vision, has algorithms for color
-# image processesing and api for reading data from webcams and image files
+# image processing and api for reading data from webcams and image files
 import serial # library for implementing the serial interface with the arduino
 import time # used primarily in this project to implement wait functions
 import kociemba # Implements the kociemba algorithm, given a cube map it provides
 # a function that will return a string representing the instructions to solve the
 # rubiks cube.
 
-def mechanicalDemo(cubeStr, waitTime):
+def workKociembaSolution(cubeStr, waitTime):
     # Method used to solve the cube with a hardcoded cube map, cubeStr is the
     # cube map, waitTime is the time to delay before the assembly grabs the cube
 
@@ -38,8 +38,8 @@ def convertInput(kociembaIN, toWhat):
 
     # The functions argument kociembaIN is a general cube map string,
     # toWhat is a string representing what the desired reference, color or orientation.
-    # Color is denoted by passing thestring "URF" and orientation is denoted by
-    # passing the string "WBR"
+    # Orientation based reference is denoted by passing the string "URF" (up, right front)
+    # and color based reference is denoted by passing the string "WBR" (white, blue, red)
 
     replace = 'WBRYGO'
     replace_with = 'URFDLB'
@@ -58,12 +58,12 @@ def convertInput(kociembaIN, toWhat):
 
 def servoCalibration():
     # This function implements positioning calibration for the project.
-    # The intended use is to move the servomotors using the sliders on the GUI
-    # when a desired position for the position of the servomotor is found, write
-    # down the value and what position number it corresponds to. After proper positioning
-    # of each servomotor is found the default settings are to be recorded in the
-    # file servos.csv which then provides configuration parameters for the project when
-    # sending commands to the servo assembly in "run" mode.
+    # The intended use is to move the servo motors using the sliders on the GUI to
+    # and to record by hand the desired positioning of the servo motors.
+
+    # These default settings are to be recorded in the file servos.csv which then
+    # provides configuration parameters for the project when sending commands to
+    # the servo assembly in "run" mode.
 
     ser = serial.Serial('COM3',9600)
     time.sleep(2);
@@ -101,9 +101,9 @@ def colorCalibration(capSource = None):
     # Color Calibration gui, this function implements a system for calibrating
     # the color filter settings for the computer vision portion of the project.
     # Sliders allow the user to set the min and max HSV values for the filter for
-    # each of the 6 cube face colors as well as filters to remove background colors
+    # each of the 6 cube face colors as well as filters to remove background colors.
     #
-    # The argument capSource is an integer represeting the disired video capture source,
+    # The argument capSource is an integer representing the desired video capture source,
     # If there are multiple webcams connected to your pc you select them with the
     # integer. The default value of None opens an image file "rcube.jpeg".
 
@@ -156,7 +156,7 @@ def colorCalibration(capSource = None):
 
 def main():
     # servoCalibration()
-    # mechanicalDemo("WYOYWRGBBRGBOBGWYWROWORYROOBGGWYBYWGORYBGWGBYYGBWORRRO",4.0)
+    # workKociembaSolution("WYOYWRGBBRGBOBGWYWROWORYROOBGGWYBYWGORYBGWGBYYGBWORRRO",4.0)
     colorCalibration(0)
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ import Color_File as files # module is used by the Setup_Color_Window class to
 
 class Setup_Servo_Window(Frame):
     # gui to calibrate the position of the servomotors. Just displays 8 sliders
-    # with accessable data. That data is to be written on the serial port to the
+    # with accessable data. That data is to be written on the serial port of the
     # servo assembly.
 
     def __init__(self, master):
@@ -56,7 +56,7 @@ class Setup_Color_Window(Frame):
     def create_widgets(self):
         # method adds widgets to gui frame
 
-        #Scales to adjust the hsv mins and maxes for the display
+        #Scale widgets adjust the hsv mins and maxes for the display
         self.hue_MIN = Scale(self, from_=0, to=255, orient=HORIZONTAL, length=250)
         self.hue_MAX = Scale(self, from_=0, to=255, orient=HORIZONTAL, length=250)
         self.sat_MIN = Scale(self, from_=0, to=255, orient=HORIZONTAL, length=250)
@@ -65,7 +65,7 @@ class Setup_Color_Window(Frame):
         self.val_MAX = Scale(self, from_=0, to=255, orient=HORIZONTAL, length=250)
 
 
-        # populate the frame with widgets to control and view each color
+        # populate the frame with more widgets to control and view each color
         for x in range(len(self.__color_names)):
             name = self.__color_names[x]
             text = self.file_control.get_entry_text(name)
@@ -104,17 +104,17 @@ class Setup_Color_Window(Frame):
         self.color_set_button[6].config(command = lambda: self.set_filter(self.__color_names[6]))
         self.color_set_button[7].config(command = lambda: self.set_filter(self.__color_names[7]))
 
-        # init Load, Save, and finish buttons and assign event handlers
+        # initialize Load, Save, and finish buttons and assign event handlers
         self.reset_button = Button(self, text="Reset", command=self.reset_values)
         self.load_defaults_button = Button(self, text="Load Defaults", command=self.load_defaults)
         self.save_defaults_button = Button(self, text="Save Defaults", command=self.save_defaults)
         self.finish_button = Button(self, text='Finish', command=self.finish_setup)
 
-        # init exclusivity checkbox
+        # initialize exclusivity checkbox
         self.check_button_label = Label(self, text="Exclusive:")
         self.check_button = Checkbutton(self, variable=self.__exclusive)
 
-        # init labels
+        # initialize labels
         self.hue_label = Label(self, text="Hue:")
         self.sat_label = Label(self, text="Saturation:")
         self.val_label = Label(self, text="Value:")
@@ -122,7 +122,7 @@ class Setup_Color_Window(Frame):
         self.max_label = Label(self, text="Maximum")
         self.min_label = Label(self, text="Minimum")
 
-        #set scales
+        #set scale values
         self.hue_MAX.set(255)
         self.sat_MAX.set(255)
         self.val_MAX.set(255)
@@ -235,7 +235,11 @@ class Setup_Color_Window(Frame):
         self.file_control.read_csv()
         for x in range(len(self.__color_names)):
             text = self.file_control.get_entry_text(self.__color_names[x])
+            self.color_entries[x].config(state=NORMAL)
+            self.color_entries[x].delete(0, END)
             self.color_entries[x].insert(0, text)
+            self.color_entries[x].config(state=DISABLED)
+
 
 
     def finish_setup(self):

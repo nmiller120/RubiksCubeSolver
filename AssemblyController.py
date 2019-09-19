@@ -5,20 +5,21 @@
 # SOLUTION string is passed to the class method kociemba(). This method parses
 # the solution string and sends the arduino controlling the assembly a series of
 # instruction codes describing the positions of the servo motors needed to solve
-# the puzzle. The class methods are all public and can be called as needed.
+# the puzzle. The other class methods are all public and can be called as needed.
 
-# serial commands: first character refers to the servo to control, 2nd character refers
-# to the position, ie, "0121" means servo 0 position 1, servo 2 position 1. The positions
-# are defined during the program phase in the code for the  __init__() function of this
-# class
+# run mode serial commands: first character refers to the servo to control,
+# 2nd character refers to the position, ie, "0121" means servo 0 position 1, servo 2
+# position 1. The positions are defined during the program phase, which is implemented
+# in the code for the __init__() method of this class
 
 import serial
 import time
 
 class AssemblyController():
 
-    __Serial = None
+    __Serial = None # serial port object
     __delay = 0.5 # time the system waits for the servomotors to get into position
+    # before sending the next command
 
     def __init__(self):
 
@@ -175,26 +176,40 @@ class AssemblyController():
         size = len(inst)
         print(size)
 
+        # for each instruction in array
         for x in range(size):
             rotation = None
+
+            # if instruction has one character, mark for clockwise rotation
             if len(inst[x]) == 1:
                 rotation = "CW"
 
+            # if instruction is followed by a single quote, mark for counter
+            # clockwise rotation
             elif inst[x][1] == '\'':
                 rotation = "CCW"
 
+            # if instruction is followed by a 2 mark for 2 clockwise rotations
             elif inst[x][1] == '2':
                 rotation = "2CW"
 
+            # if the instruction is for a face that is not on the top or bottom
+            # turn the given face according to the direction found above
             for y in range(4):
                 if inst[x][0] == sides[y]:
                     self.turn_face(y, rotation)
 
+            # if the instruction is for the top face, turn the cube ccw about the
+            # right axis, then rotate the face in the front position. After the front
+            # face is turned, rotate the cube back to the default position.
             if inst[x][0] == 'U':
                 self.rightCCW()
                 self.turn_face(0, rotation)
                 self.rightCW()
 
+            # if the instruction is for the bottom face, turn the cube cw about the
+            # right axis, then rotate the face in the front position. After the front
+            # face is turned, rotate the cube back to the default position.
             if inst[x][0] == 'D':
                 self.rightCW()
                 self.turn_face(0, rotation)
