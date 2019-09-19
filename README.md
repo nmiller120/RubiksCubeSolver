@@ -8,14 +8,14 @@ Parts were designed in Autodesk Inventor, the cross sections of the parts were c
 
 The actuators are all standard size hobby servo motors, primarily used in RC cars. They are cheap, powerful, and easy to control. They worked well for this application.
 
-### Electrical Design
+## Electrical Design
 
 The Arduino acts as the controller for the servo motor assembly. It interfaces with a servo motor driver board I ordered on adafruit to control the 8 servos. The arduino recieves serial commands from the program running on my laptop via USB. These commands are decoded into smaller instructions that are passed down to ther servo driver.
 
-#### Software Design
+## Software Design
 
 The goal of the project is to have the program start by moving the assembly showing the layout of the cube to a webcam mounted above. A computer vision algorithm is applied to the video feed, detecting the colors on the cube's faces and recording that data into memory. Once all of the faces have been read, the data recorded is to be passed to the Kociemba algorithm. The algorithm outputs instructions on how the cube is to be solved. The AssemblyController module then parses those instructions and determines how each of the given instruction is to be implemented and relays that information to the arduino by commanding the positioning of the assembly's servo motors. A demo of the mechanical assembly working a solution can be seen above as well as a demo of how the HSV filtering is implemented.
 
-##### Additional Links:
+### Additional Links:
 Kociemba Algorithm: https://github.com/muodov/kociemba  
 Open CV Library: https://pypi.org/project/opencv-python/
