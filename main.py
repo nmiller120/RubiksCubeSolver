@@ -2,10 +2,10 @@
 # Nick Miller
 # Last Update: Feb, 2018
 
-import Objects_GUI as gui # contains classes used for the calibration gui
-import Objects_CubeControl as cubes # implements the lower level control of the
+import RubiksGUIs as gui # contains classes used for the calibration gui
+import AssemblyController as cubes # implements the lower level control of the
 # rubiks cube, moves the servo assembly
-import Objects_Overlay as overlay #
+import Mask as overlay #
 from tkinter import * # library for implementing guis
 import cv2 # library for implementing computer vision, has algorithms for color
 # image processesing and api for reading data from webcams and image files
