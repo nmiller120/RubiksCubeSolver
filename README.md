@@ -18,6 +18,8 @@ The goal of the project is to have the program start by moving the assembly, sho
 
 I have spent a lot of time commenting and adding documentation to the code for this project. I am trying to keep the code in as readable of condition as possible. Feel free to read through the project files as they may shed light on some of the more of the technical details of the project not covered here. 
 
+Thanks for reading!
+
 ### Additional Links:
 Kociemba Algorithm: https://github.com/muodov/kociemba  
 Open CV Library: https://pypi.org/project/opencv-python/
