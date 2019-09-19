@@ -3,7 +3,7 @@
  it waits for a command...
 
   - In "Program" mode the arduino waits for the default positions of each of the servo motors to be loaded into the settingArray
-  - In "calibration" mode the arduino accepts a continuous stream of commands for the positons of each of the servo motors. Unlike in run mode these positions are a value between 0 and 255 allowing the servo motors to
+  - In "calibration" mode the arduino accepts a continuous stream of commands for the positons of each of the servo motors. Unlike in run mode these positions are a value between 0 and 180 allowing the servo motors to
   sit anywhere in their full range of motion. This mode is used to determine the setpoints to be downloaded in "Program" mode and used in "run" mode.
   - In "run" mode the arduino accepts commands of the form "xYxYxY" where x represents any servo motor from 0 to 7 and Y represents a pre-programmed position. This command can have between 2 and 16 characters.
   Example of run commands:
@@ -11,7 +11,7 @@
     - 73 (servo 7 to position 3)
     - 4263 (servo 4 to position 2, servo 6 to position 3)
 
-  The servo motors are divided into 2 groups, linear and radial. Linear moves the claws forward and backward. Radial servos rotate the claws. Even rows in the settingArray represent linear, odd rows represent radial. 
+  The servo motors are divided into 2 groups, linear and radial. Linear moves the claws forward and backward, radial servos rotate the claws. Even rows in the settingArray represent linear, odd rows represent radial. 
   Position 0, 1, and 2 for radial servos represent 0, 90 and 180 degrees respectively. Positions 0 and 1 represent 45 and 135 degrees respectively. 
  
  

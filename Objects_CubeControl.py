@@ -1,16 +1,27 @@
+# Module defines a single class AssemblyController which handles all communication
+# with the servo assembly.
+
+# When solving the cube, first the controller object is created, then the kociemba
+# SOLUTION string is passed to the class method kociemba(). This method parses
+# the solution string and sends the arduino controlling the assembly a series of
+# instruction codes describing the positions of the servo motors needed to solve
+# the puzzle. The class methods are all public and can be called as needed.
+
+# serial commands: first character refers to the servo to control, 2nd character refers
+# to the position, ie, "0121" means servo 0 position 1, servo 2 position 1. The positions
+# are defined during the program phase in the code for the  __init__() function of this
+# class
+
 import serial
 import time
 
 class AssemblyController():
-    # serial commands: first character refers to the servo to control, 2nd character refers
-    # to the position, ie, "0121" means servo 0 position 1, servo 2 position 1. The positions
-    # are defined during the program phase in the code for the  __init__() function of this
-    # class
+
     __Serial = None
-    __errorCheck = ""
-    __delay = 0.5
+    __delay = 0.5 # time the system waits for the servomotors to get into position
 
     def __init__(self):
+
         # create serial port obj.
         self.__Serial = serial.Serial('COM3',9600, timeout = 1)
         Serial = self.__Serial
@@ -45,7 +56,7 @@ class AssemblyController():
         print(Serial.read())
 
     def rightCCW(self):
-        #rotate right CCW
+        # method rotates the entire cube about the right axis CCW
         delay = self.__delay
         Serial = self.__Serial
         self.all_engaged()
@@ -70,7 +81,7 @@ class AssemblyController():
         time.sleep(delay)
 
     def rightCW(self):
-        #rotate right CW
+        # method rotates the entire cube about the right axis clockwise
         delay = self.__delay
         Serial = self.__Serial
         self.all_engaged()
@@ -95,7 +106,7 @@ class AssemblyController():
         time.sleep(delay)
 
     def frontCCW(self):
-        #rotate front CCW
+        # method rotates the entire cube about the front axis counter-clockwise
         delay = self.__delay
         Serial = self.__Serial
         self.all_engaged()
@@ -120,7 +131,7 @@ class AssemblyController():
         time.sleep(delay)
 
     def frontCW(self):
-        #rotate front CCW
+        # method rotates the entire cube about the front axis clockwise
         delay = self.__delay
         Serial = self.__Serial
         self.all_engaged()
@@ -145,16 +156,20 @@ class AssemblyController():
         time.sleep(delay)
 
     def all_retract(self):
+        # method retracts all claws
         instruction = '0110213041506170'
         self.__Serial.write(instruction)
 
     def all_engaged(self):
+        # method extends all claws
         instruction = '0010203040506070'
         self.__Serial.write(instruction)
 
     def kociemba(self, kociemba_string):
+        # method implements the kociemba solution
         # Example of kociemba string:
         # "R' D2 R' U2 R F2 D B2 U' R F' U R2 D L2 D' B2 R2 B2 U' B2"
+
         sides = ['F', 'R', 'B', 'L', 'U', 'D']
         inst = kociemba_string.split(' ')
         size = len(inst)
@@ -186,8 +201,14 @@ class AssemblyController():
                 self.rightCCW()
 
     def turn_face(self, face_selection, rotate):
+        # method turns the selected face by the given amount, either clockwise 90 deg,
+        # counter clockwise 90 deg, or clockwise 180 deg.
+
         # face selection is F, R, B, L
         # maps to ( 1 + 2*n ) : n = 0, 1, 2, 3
+
+        # rotate is a string of the follwing values "CW", "CCW", or "2CW"
+
         Serial = self.__Serial
         delay = self.__delay * 2
         self.all_engaged()
@@ -224,141 +245,3 @@ class AssemblyController():
             time.sleep(delay)
             Serial.write(R+'3')
             time.sleep(delay)
-
-    def show_face(self, new_top, new_front):
-        
-        if new_front == self.cube.back:
-            self.cube.rotate("right", "CCW")
-
-        if new_front == self.cube.bottom:
-            self.cube.rotate("right", "CCW")
-            self.cube.rotate("right", "CCW")
-
-        if new_front == self.cube.front:
-            self.cube.rotate("right", "CW")
-
-        if new_front == self.cube.right:
-            self.cube.rotate("front", "CCW")
-
-        if new_front == self.cube.left:
-            self.cube.rotate("front", "CW")
-
-        self.cube.rotate("right", "CCW")
-
-        if new_top == self.cube.top:
-            print "Done."
-
-        if new_top == self.cube.left:
-            self.cube.rotate("front", "CW")
-            print "Done."
-
-        if new_top == self.cube.right:
-            self.cube.rotate("front", "CCW")
-            print "Done."
-
-        if new_top == self.cube.bottom:
-            self.cube.rotate("front", "CCW")
-            self.cube.rotate("front", "CCW")
-            print "Done."
-
-class Orientation():
-    """object to track the orientation of the rubiks cube"""
-    up = None
-    front = None
-    right = None
-    down = None
-    back = None
-    left = None
-
-    __layout = ["W", "Y", "R", "O", "B", "G"]
-    __tfr_layout = ["W", "R", "B"]
-
-    def __init__(self, upChr, frontChr):
-        self.reorient(upChr, frontChr)
-
-    def rotate(self, about_axis, rotate):
-        """about_axis = 'front' or 'right' 
-           rotate = 'CW' or 'CCW'"""
-        print "About " + about_axis + " rotate " + rotate
-        if about_axis == "right":
-            faces = [self.up, self.back, self.down, self.front]
-            if rotate == "CCW":
-                self.up = faces[1]
-                self.back = faces[2]
-                self.down = faces[3]
-                self.front = faces[0]
-
-            if rotate == "CW":
-                self.up = faces[3]
-                self.back = faces[0]
-                self.down = faces[1]
-                self.front = faces[2]
-
-        if about_axis == "front":
-            faces = [self.top, self.right, self.bottom, self.left]
-            if rotate == "CCW":
-                self.top = faces[1]
-                self.right = faces[2]
-                self.bottom = faces[3]
-                self.left = faces[0]
-
-            if rotate == "CW":
-                self.up = faces[3]
-                self.right = faces[0]
-                self.down = faces[1]
-                self.left = faces[2]
-
-    def reorient(self, newUp, newFront):
-        self.up = newUp
-        self.front = newFront
-        up_sign = None
-        front_sign = None
-        up_direction = None
-        front_direction = None
-        right_direction = None
-        right_sign = None
-
-        for x in range(6):
-            if self.__layout[x] == newUp and x % 2==0:
-                self.down = self.__layout[x+1]
-                up_sign = 1
-                up_direction = x//2
-
-            if self.__layout[x] == newUp and x % 2==1:
-                self.down = self.__layout[x-1]
-                up_sign = -1
-                up_direction = x//2
-
-            if self.__layout[x] == newFront and x % 2==0:
-                self.back = self.__layout[x+1]
-                front_sign = 1
-                front_direction = x//2
-
-            if self.__layout[x] == newFront and x % 2==1:
-                self.back = self.__layout[x-1]
-                front_sign = -1
-                front_direction = x//2
-
-        loop = [0, 1, 2, 0, 1, 2]
-
-        for x in range(6):
-            if up_direction == loop[x]:
-                if front_direction == loop[x+1]:
-                    right_direction = loop[x+2]
-                    right_sign = 1
-
-                else:
-                    y = 5 - x
-                    loop.reverse()
-                    right_direction = loop[(y+2)%6]
-                    right_sign = -1
-
-                break
-
-        if up_sign * front_sign * right_sign > 0:
-            self.right = self.__layout[right_direction*2]
-            self.left = self.__layout[right_direction*2 + 1]
-
-        else:
-            self.right = self.__layout[right_direction*2 + 1]
-            self.left = self.__layout[right_direction*2]

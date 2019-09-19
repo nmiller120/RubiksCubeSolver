@@ -1,3 +1,10 @@
+# Module contains one class Color, which defines filter parameters for a given
+# color. HSV refers to the hue, saturation, value color space. If a given pixel
+# falls in the hsv range that pixel is given a logical 1, if its outside the pixel
+# is assigned a logical 0 when the mask of the image is created. The boolean variable
+# exclusive is used for the color red, whose hue values wrap back around (ie. red
+# corresponds values less than h ~= 25 and greater than h ~= 240)
+
 class Color():
     __hsv_MAX = [] # maximum hsv value for a given color
     __hsv_MIN = [] # minumum hsv value for a given color

@@ -1,22 +1,23 @@
-from __future__ import print_function
-import Objects_GUI as gui
-import Objects_File as files
-import Objects_Color as color
-import Objects_Overlay as overlay
-import Objects_FaceletDetection as detection
-import Objects_CubeControl as cubes
+# Rubik's Cube Solver Project
+# Nick Miller
+# Last Update: Feb, 2018
 
-from Tkinter import *
-import numpy as np
-import cv2
-import serial
-import time
-import kociemba
-from string import maketrans
+import Objects_GUI as gui # contains classes used for the calibration gui
+import Objects_CubeControl as cubes # implements the lower level control of the
+# rubiks cube, moves the servo assembly
+import Objects_Overlay as overlay #
+from tkinter import * # library for implementing guis
+import cv2 # library for implementing computer vision, has algorithms for color
+# image processesing and api for reading data from webcams and image files
+import serial # library for implementing the serial interface with the arduino
+import time # used primarily in this project to implement wait functions
+import kociemba # Implements the kociemba algorithm, given a cube map it provides
+# a function that will return a string representing the instructions to solve the
+# rubiks cube.
 
-def mechanicalDemo1(cubeStr, waitTime):
-    """To solve the cube with a hardcoded cube map, cubeStr is the cube map
-    and waitTime is the time to delay before the assembly grabs the cube"""
+def mechanicalDemo(cubeStr, waitTime):
+    # Method used to solve the cube with a hardcoded cube map, cubeStr is the
+    # cube map, waitTime is the time to delay before the assembly grabs the cube
 
     cubeStr = convertInput(cubeStr, "URF") # convert from position reference to color reference
     solution = kociemba.solve(cubeStr) # get solution string from kociemba algorithm
@@ -29,8 +30,17 @@ def mechanicalDemo1(cubeStr, waitTime):
     control.all_retract() # release cube
 
 def convertInput(kociembaIN, toWhat):
-    """Change the input string to and from color. toWhat is either
-    'URF' or 'WBR'"""
+    # the kociemba algorithm accepts a general cube map string that is agnostic to
+    # what color the faces are. In this formatting the sides are labeled as 'u', 'r'
+    # 'f', 'd', 'l' and, 'b' for up, right, down, front, down, left, and back. This
+    # method is used to convert between kociemba's general cube mapping and a cube
+    # mapping based on the colors of the faces.
+
+    # The functions argument kociembaIN is a general cube map string,
+    # toWhat is a string representing what the desired reference, color or orientation.
+    # Color is denoted by passing thestring "URF" and orientation is denoted by
+    # passing the string "WBR"
+
     replace = 'WBRYGO'
     replace_with = 'URFDLB'
 
@@ -42,16 +52,21 @@ def convertInput(kociembaIN, toWhat):
         replace = 'URFDLB'
         replace_with = 'WBRYGO'
 
-    transtab = maketrans(replace,replace_with)
+    transtab = {ord(x): y for (x, y) in zip(replace, replace_with)}
     print(kociembaIN)
     return kociembaIN.translate(transtab)
 
 def servoCalibration():
-    """Runs the servo setup gui, only for testing the default position
-    of the servo motors"""
+    # This function implements positioning calibration for the project.
+    # The intended use is to move the servomotors using the sliders on the GUI
+    # when a desired position for the position of the servomotor is found, write
+    # down the value and what position number it corresponds to. After proper positioning
+    # of each servomotor is found the default settings are to be recorded in the
+    # file servos.csv which then provides configuration parameters for the project when
+    # sending commands to the servo assembly in "run" mode.
+
     ser = serial.Serial('COM3',9600)
     time.sleep(2);
-    #ser.write("debug".encode("utf-8"))
     ser.write("calib".encode("utf-8"))
     time.sleep(1);
 
@@ -82,30 +97,35 @@ def servoCalibration():
                 print(ser.read(), end='')
             break
 
-def colorCalibration(cap = None):
-    """Color Calibration gui, to set the minumum and maximum hsv values when using the vision system
-     cap: capture object"""
+def colorCalibration(capSource = None):
+    # Color Calibration gui, this function implements a system for calibrating
+    # the color filter settings for the computer vision portion of the project.
+    # Sliders allow the user to set the min and max HSV values for the filter for
+    # each of the 6 cube face colors as well as filters to remove background colors
+    #
+    # The argument capSource is an integer represeting the disired video capture source,
+    # If there are multiple webcams connected to your pc you select them with the
+    # integer. The default value of None opens an image file "rcube.jpeg".
 
-    #create "root" for Main Window
     root = Tk()
     root.title("Main Window")
     root.geometry('600x700')
 
     frame = None
-    if cap == None:
+    if capSource == None:
         frame = cv2.imread("rcube.jpg")
 
     else:
-        ret, frame = cap.read()
 
-    #cv2.imshow("Frame", frame)
+        cap = cv2.VideoCapture(capSource)
+        ret, frame = cap.read()
 
     mask = overlay.Mask()
 
     # Create Main Window
     setup_app = gui.Setup_Color_Window(root)
 
-    #begin loop, end when setup is complete
+    # begin loop, end when setup is complete
     while not setup_app.is_complete():
         try:
             #pull image from feed
@@ -132,11 +152,12 @@ def colorCalibration(cap = None):
     if setup_app.is_complete():
 
         root.destroy()
-##        cap.release()
         cv2.destroyAllWindows()
 
 def main():
-    mechanicalDemo1("WYOYWRGBBRGBOBGWYWROWORYROOBGGWYBYWGORYBGWGBYYGBWORRRO",4.0)
+    # servoCalibration()
+    # mechanicalDemo("WYOYWRGBBRGBOBGWYWROWORYROOBGGWYBYWGORYBGWGBYYGBWORRRO",4.0)
+    colorCalibration(0)
 
 if __name__ == '__main__':
     main()

@@ -1,25 +1,35 @@
-# Handles the control of the color.csv file
+# Module defines one class Color_File() that handles writing to and reading from
+# the color.csv file.
 
 import Objects_Color as color
 
 class Color_File():
     __def_name = "colors.csv"
-    __colors = []
-    __color_names = []
+    __colors = [] # list of color objects, each object stores hsv min
+    # and max values, as well as exclusivity and the color name as a string
+    __color_names = [] # list of only the color names
 
     def __init__(self):
         self.read_csv()
 
     def get_color_names(self, color_names):
-        del color_names[:]
+        # del color_names[:]
         for x in range(len(self.__color_names)):
             color_names.append(self.__color_names[x])
 
     def read_csv(self):
+        # method reads the colors.csv file into local variables
+
+        # delete current color data
         del self.__colors[:]
         del self.__color_names[:]
+
+        # open colors.csv
         csv_file = self.__def_name
         file = open(csv_file,"r")
+
+        # read color label, exclusivity, hsv min, and hsv max values from color
+        # file and store data in local vars
         for line in file:
             line = line.strip()
             csv_line = line.split(",")
@@ -41,6 +51,7 @@ class Color_File():
         file.close()
 
     def write_csv(self):
+        # method writes contents of self.__colors[] into the colors.csv file
         csv_file = self.__def_name
         file = open(csv_file, "w")
         for x in range(len(self.__color_names)):
@@ -69,6 +80,9 @@ class Color_File():
         file.close()
 
     def get_entry_text(self, color):
+        # Method returns a string displaying the contents of the csv file for the
+        # specified color. Used to display memory contents in the color
+        # configuration gui.
         cn = None
         text = ""
         for x in range(len(self.__color_names)):
@@ -82,6 +96,7 @@ class Color_File():
         return text
 
     def write_to_color(self, color, hsv_MIN, hsv_MAX, exclusive):
+        # method writes over the specified color with the given data
         cn = None
         for x in range(len(self.__color_names)):
             if color == self.__color_names[x]:
@@ -91,6 +106,7 @@ class Color_File():
 
 
     def get_hsv_MIN(self, color):
+        # method returns the hsv_Min for the specified color
         cn = None
         for x in range(len(self.__color_names)):
             if color == self.__color_names[x]:
@@ -99,6 +115,7 @@ class Color_File():
         return self.__colors[cn].get_hsv_MIN()
 
     def get_hsv_MAX(self, color):
+        # method returns the hsv_Max for the specified color
         cn = None
         for x in range(len(self.__color_names)):
             if color == self.__color_names[x]:
@@ -107,10 +124,11 @@ class Color_File():
         return self.__colors[cn].get_hsv_MAX()
 
     def is_exclusive(self, color):
+        # method returns the exclusivity of the specified color
         cn = None
         for x in range(len(self.__color_names)):
             if color == self.__color_names[x]:
                 cn = x
 
         return self.__colors[cn].is_exclusive()
-    
+
