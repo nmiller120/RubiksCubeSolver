@@ -16,7 +16,7 @@ The Arduino acts as the controller for the servo motor assembly. It interfaces w
 
 The goal of the project is to have the program start by moving the assembly, showing the layout of the cube to a webcam mounted above. A computer vision algorithm is to be applied to the video feed, detecting the colors on the cube's faces and recording that data into memory. Once all of the faces have been read, the data recorded is to be passed to the Kociemba algorithm. The algorithm outputs instructions on how the cube is to be solved. The AssemblyController module then parses those instructions and determines how each of the given instruction is to be implemented and relays that information to the arduino by commanding the positioning of the assembly's servo motors. A demo of the mechanical assembly working a solution can be seen above, as well as a demo on how the HSV filtering values are calibrated.
 
-I have spent a lot of time commenting and adding documentation to the code for this project, so feel free to read through the project files as they may shed light on more of the technical details of the project not covered here. 
+I have spent a lot of time commenting and adding documentation to the code for this project. I am trying to keep the code in as readable of condition as possible. Feel free to read through the project files as they may shed light on some of the more of the technical details of the project not covered here. 
 
 ### Additional Links:
 Kociemba Algorithm: https://github.com/muodov/kociemba  
