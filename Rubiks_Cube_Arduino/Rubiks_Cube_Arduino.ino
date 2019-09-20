@@ -1,24 +1,30 @@
  /**************************************************************************
- Code for the firmware running on the arduino for the rubiks cube project. The arduino acts as a controller for the assembly, taking commands from the PC. The assembly begins in standby mode where 
- it waits for a command.
+ Code for the firmware running on the arduino for the rubiks cube project. The arduino acts as a controller for the assembly, 
+ taking commands from the PC. The assembly begins in standby mode where it waits for a command.
 
   - In "Program" mode the arduino waits for the default positions of each of the servo motors to be loaded into the settingArray
-  - In "calibration" mode the arduino accepts a continuous stream of commands for the positons of each of the servo motors. Unlike in run mode these positions are a value between 0 and 180 allowing the servo motors to
-  sit anywhere in their full range of motion. This mode is used to determine the setpoints to be downloaded in "Program" mode and used in "run" mode.
-  - In "run" mode the arduino accepts commands of the form "xYxYxY" where x represents any servo motor from 0 to 7 and Y represents a pre-programmed position. This command can have between 2 and 16 characters.
+  
+  - In "calibration" mode the arduino accepts a continuous stream of commands for the positons of each of the servo motors. Unlike in 
+  run mode these positions are a value between 0 and 180 allowing the servo motors to sit anywhere in their full range of motion. 
+  This mode is used to determine the setpoints to be downloaded in "Program" mode and used in "run" mode.
+  
+  - In "run" mode the arduino accepts commands of the form "xYxYxY" where x represents any servo motor from 0 to 7 and Y represents a 
+  pre-programmed position. This command can have between 2 and 16 characters.
+  
   Example of run commands:
     - 012131 (servos 0, 1, and 3 to position 1)
     - 73 (servo 7 to position 3)
     - 4263 (servo 4 to position 2, servo 6 to position 3)
 
-  The servo motors are divided into 2 groups, linear and radial. Linear moves the claws forward and backward, radial servos rotate the claws. Even rows in the settingArray represent linear, odd rows represent radial. 
-  Position 0, 1, and 2 for radial servos represent 0, 90 and 180 degrees respectively. Positions 0 and 1 represent 45 and 135 degrees respectively. 
- 
- 
+  The servo motors are divided into 2 groups, linear and radial. Linear moves the claws forward and backward, 
+  radial servos rotate the claws. Even rows in the settingArray represent linear, odd rows represent radial. 
+  
+  Position 0, 1, and 2 for radial servos represent 0, 90 and 180 degrees respectively. 
+  Positions 0 and 1 represent 45 and 135 degrees respectively. 
  */
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
-s
+
 // called this way, it uses the default address 0x40
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -64,8 +70,8 @@ void calibration(){
   /*
      Function reads a semi-continuous stream of data. Each calibration command is coded in ASCII text and is of the form
      1.x.x.x.x.x.x where 1 signals the start of a new command and each x is an integer between 0 and 180. The following code 
-     parses those commands and writes them out to the motor controller using the setPWM() function. If a value of -10 is sent to the 
-     arduino the assembly returns to standby mode
+     parses those commands and writes them out to the motor controller using the setPWM() function. If a value of -10 is sent 
+     to the arduino the assembly returns to standby mode
   */
   while(Serial.available()){
     int readIN = Serial.parseInt();
@@ -111,13 +117,14 @@ void run_mode(){
   
 void program(){
   /*
-   * This function is how the default position values are loaded to the arduino. The software running on the PC sends the positioning data as a stream of 
-   * bytes (ie. 180 is transmitted as a single byte with hex value 0xB4). These values are loaded into the settingArray. The setting array is a 2d array. Even 
-   * rows in the array are controlling linear motion, odd rows in the array are controlling radial motion. 
-   * 
+   * This function is how the default position values are loaded to the arduino. The software running on the PC sends the positioning 
+   * data as a stream of bytes (ie. 180 is transmitted as a single byte with hex value 0xB4). These values are loaded into the 
+   * settingArray. The setting array is a 2d array. Even rows in the array are controlling linear motion, odd rows in the array are 
+   * controlling radial motion. 
+   *
    * Format of linear = [deg45, deg135, 0, 0, 0, 90] // the 90 degree values act as an error check of the instruction
-   * Format of radial = [deg0, deg90, deg180, 0, deg90+, deg180+] deg90+ and deg180+ are slightly more agressive turns to help allignment of the cube face when turning a 
-   * side.
+   * Format of radial = [deg0, deg90, deg180, 0, deg90+, deg180+] deg90+ and deg180+ are slightly more agressive turns to help 
+   * allignment of the cube face when turning a side.
    * 
    * Automatically goes back to standby mode after program settings are recieved
    */
@@ -129,7 +136,10 @@ void program(){
           settingArray[i][j] = Serial.read(); // if in program mode load settingArray with data from serial buffer
           }
         }
-        if (settingArray[0][5]==90 && settingArray[2][5]==90 && settingArray[4][5]==90 && settingArray[6][5]==90){error_check = true;} // error check = 0
+      
+        // error check = 0
+        if (settingArray[0][5]==90 && settingArray[2][5]==90 && settingArray[4][5]==90 && settingArray[6][5]==90){error_check = true;} 
+   
         if (debug == true){
           Serial.println("Recieved data..."); 
           for (int i=0; i<8; i++){
@@ -151,8 +161,8 @@ void program(){
 
 void standby(){
   /*
-   * Standby mode waits for a mode change command. Command is a 5 character ascii string. Debug mode can also be toggled in standby. This just sends debug messsages
-   * to the serial port along with the acnowlegments that are sent when debug mode is off. 
+   * Standby mode waits for a mode change command. Command is a 5 character ascii string. Debug mode can also be toggled in standby. 
+   * This just sends debug messsages to the serial port along with the acnowlegments that are sent when debug mode is off. 
    */
   
   char modeSelect[8] = "";
